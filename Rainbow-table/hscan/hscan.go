@@ -173,7 +173,6 @@ func GuessSingle(hash string, filename string) {
 			str := worker(read, hash, &found)
 			if str != "" {
 				fmt.Println("found password for: " + hash + " " + str)
-				found = true
 			}
 		}()
 	}
