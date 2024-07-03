@@ -24,21 +24,24 @@ type inter interface {
 
 func (x PassTest) getNext(rns []rune) {
 	max := len(rns)
-	for i := range x.nums {
-		cur := x.nums[i] + x.inc
-		if cur < max {
-			x.nums[i] = cur
-			x.current[i] = rns[x.nums[i]]
-			break
-		} else {
-			x.nums[i] = cur % max
-			x.current[i] = rns[cur%max]
+	if (x.nums[0]+x.inc)/max == 1 {
+		//this is so we don't have to add 1 to the if statment each loop
+		max -= 1
+		for i := range x.nums[1:] {
+			if x.nums[i+1] == max {
+				x.nums[i+1] = 0
+				x.current[i+1] = rns[0]
+			} else {
+				x.nums[i+1] += 1
+				x.current[i+1] = rns[x.nums[i+1]]
+				break
+			}
 		}
+		//readjusting max fomr the -= statment
+		max += 1
 	}
-}
-
-func getNextHelper() {
-
+	x.nums[0] = (x.nums[0] + x.inc) % max
+	x.current[0] = rns[x.nums[0]]
 }
 
 func (x PassTest) toString() string {
@@ -63,14 +66,23 @@ func GuessSingle(hash string, possibleRunes []rune) string {
 	test := make(chan string, 100)
 	found := ""
 	//create the function that will generate plaintext passwords
-	go func() {
+	func() {
 		defer close(test)
-		passSize := 6
-		possibleRunes := []rune{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
+		passSize := 3
+		possibleRunes := []rune{'a', 'b', 'c'}
 		var worker PassTest
-		worker.pTinit(passSize, 0, 1, possibleRunes)
+		worker.pTinit(passSize, 0, 3, possibleRunes)
+		var worker2 PassTest
+		worker2.pTinit(passSize, 1, 3, possibleRunes)
+		var worker3 PassTest
+		worker3.pTinit(passSize, 2, 3, possibleRunes)
 		for i := math.Pow(float64(len(possibleRunes)), float64(passSize)); i > 0; i -= 1 {
+			fmt.Println(worker.toString())
 			worker.getNext(possibleRunes)
+			fmt.Println(worker2.toString())
+			worker2.getNext(possibleRunes)
+			fmt.Println(worker3.toString())
+			worker3.getNext(possibleRunes)
 		}
 		fmt.Println("Hello, World!")
 
