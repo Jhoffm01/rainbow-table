@@ -51,13 +51,13 @@ Usage:
 
 To generate a rainbow table:
 
-HashCracker.exe generate '<hash function>' <password-dump.txt>
+HashCracker.exe generate &lt;hash function&gt; <password-dump.txt>
 
 You can also use "g" instead of "generate".
 
 To search a rainbow table for hashes:
 
-HashCracker.exe find '<hash>' <password-dump-hash.txt>
+HashCracker.exe find &lt;hash&gt; <password-dump-hash.txt>
 
 You can also use "f" instead of "find".
 
